@@ -15,13 +15,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
+	final boolean squaredInputs = true;
+	
 	RobotDrive m_robot;
 	Climber m_climber;
 
 	XboxController m_xBox;
 	Joystick m_jStick;
 
-	boolean squaredInputs;
 	double maxDriveSpeed = 1;
 
 	/* AUTO MODES */
@@ -39,8 +40,6 @@ public class Robot extends IterativeRobot {
 		m_robot.setSafetyEnabled(true);
 		
 		m_climber = new Climber();
-
-		squaredInputs = true;
 
 		// These should match up with the numbers on the DriverStation
 		m_jStick = new Joystick(0);
