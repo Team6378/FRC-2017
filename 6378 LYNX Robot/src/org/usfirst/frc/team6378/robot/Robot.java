@@ -22,7 +22,7 @@ public class Robot extends IterativeRobot {
 	final boolean squaredInputs = true;
 
 	RobotDrive m_robot;
-	//Climber m_climber;
+	Climber m_climber;
 	PartialClimber m_partialClimber;
 
 	XboxController m_xBox;
@@ -36,18 +36,21 @@ public class Robot extends IterativeRobot {
 	final String customAuto = "My Auto";
 
 	public void robotInit() {
-		m_robot = new RobotDrive(Mapping.fl, Mapping.bl, Mapping.fr, Mapping.br);
-		//m_climber = new Climber(Mapping.l_climb_motor, Mapping.r_climb_motor);
-		m_partialClimber = new PartialClimber(Mapping.r_climb);
+		
 		m_xBox = new XboxController(0);
-		m_jStick = new Joystick(1);
-
-		m_robot.setExpiration(0.1);
-		m_robot.setSafetyEnabled(true);
+		
+		//m_climber = new Climber(Mapping.l_climb_motor, Mapping.r_climb_motor);
+		//m_jStick = new Joystick(1);
 		
 		System.out.println("initialized");
 	}
 
+	public void teleopInit() {
+		m_robot = new RobotDrive(Mapping.fl, Mapping.bl, Mapping.fr, Mapping.br);
+		m_robot.setExpiration(0.1);
+		m_robot.setSafetyEnabled(true);
+	}
+	
 	public void teleopPeriodic() {
 
 		// Xbox controller with both sticks
@@ -76,6 +79,10 @@ public class Robot extends IterativeRobot {
 //			m_climber.climbDown(leftTrigger);
 	}
 
+	public void testInit() {
+		m_partialClimber = new PartialClimber(Mapping.r_climb);
+	}
+	
 	public void testPeriodic() {
 
 		m_partialClimber.climbUp(1);
