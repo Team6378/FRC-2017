@@ -1,6 +1,7 @@
 package org.usfirst.frc.team6378.robot;
 
 import org.usfirst.frc.team6378.subsystems.Climber;
+import org.usfirst.frc.team6378.subsystems.PartialClimber;
 import org.usfirst.frc.team6378.utils.Mapping;
 import org.usfirst.frc.team6378.utils.Utils;
 
@@ -21,7 +22,8 @@ public class Robot extends IterativeRobot {
 	final boolean squaredInputs = true;
 
 	RobotDrive m_robot;
-	Climber m_climber;
+	//Climber m_climber;
+	PartialClimber m_partialClimber;
 
 	XboxController m_xBox;
 	Joystick m_jStick;
@@ -35,7 +37,8 @@ public class Robot extends IterativeRobot {
 
 	public void robotInit() {
 		m_robot = new RobotDrive(Mapping.fl_motor, Mapping.bl_motor, Mapping.fr_motor, Mapping.br_motor);
-		m_climber = new Climber(Mapping.l_climb_motor, Mapping.r_climb_motor);
+		//m_climber = new Climber(Mapping.l_climb_motor, Mapping.r_climb_motor);
+		m_partialClimber = new PartialClimber(Mapping.r_climb_motor);
 		m_xBox = new XboxController(0);
 		m_jStick = new Joystick(1);
 
@@ -62,18 +65,18 @@ public class Robot extends IterativeRobot {
 		m_robot.arcadeDrive(y, x, squaredInputs);
 
 		/* CLIMBER */
-		double leftTrigger = m_xBox.getRawAxis(Mapping.l_trigger_axis);
-		double rightTrigger = m_xBox.getRawAxis(Mapping.r_trigger_axis);
-
-		if (rightTrigger > 0)
-			m_climber.climbUp(rightTrigger);
-		else if (leftTrigger > 0)
-			m_climber.climbDown(leftTrigger);
+//		double leftTrigger = m_xBox.getRawAxis(Mapping.l_trigger_axis);
+//		double rightTrigger = m_xBox.getRawAxis(Mapping.r_trigger_axis);
+//
+//		if (rightTrigger > 0)
+//			m_climber.climbUp(rightTrigger);
+//		else if (leftTrigger > 0)
+//			m_climber.climbDown(leftTrigger);
 	}
 
 	public void testPeriodic() {
 
-		m_climber.climbUp(1);
+		m_partialClimber.climbUp(1);
 		
 //		// Xbox controller with triggers
 //
