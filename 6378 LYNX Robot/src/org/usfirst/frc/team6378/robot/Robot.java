@@ -36,14 +36,16 @@ public class Robot extends IterativeRobot {
 	final String customAuto = "My Auto";
 
 	public void robotInit() {
-		m_robot = new RobotDrive(Mapping.fl_motor, Mapping.bl_motor, Mapping.fr_motor, Mapping.br_motor);
+		m_robot = new RobotDrive(Mapping.fl, Mapping.bl, Mapping.fr, Mapping.br);
 		//m_climber = new Climber(Mapping.l_climb_motor, Mapping.r_climb_motor);
-		m_partialClimber = new PartialClimber(Mapping.r_climb_motor);
+		m_partialClimber = new PartialClimber(Mapping.r_climb);
 		m_xBox = new XboxController(0);
 		m_jStick = new Joystick(1);
 
 		m_robot.setExpiration(0.1);
 		m_robot.setSafetyEnabled(true);
+		
+		System.out.println("initialized");
 	}
 
 	public void teleopPeriodic() {

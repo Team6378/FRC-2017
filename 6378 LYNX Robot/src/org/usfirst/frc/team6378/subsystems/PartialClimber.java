@@ -2,13 +2,14 @@ package org.usfirst.frc.team6378.subsystems;
 
 import org.usfirst.frc.team6378.utils.Utils;
 
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
 
 public class PartialClimber {
 
 	private final double maxSpeed = 0.5;
 	
-	private VictorSP m_motor;
+	private SpeedController m_motor;
 	
 	public PartialClimber(int pin) {
 		m_motor = new VictorSP(pin);
