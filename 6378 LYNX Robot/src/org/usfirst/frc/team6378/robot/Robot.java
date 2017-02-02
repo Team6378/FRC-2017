@@ -1,7 +1,6 @@
 package org.usfirst.frc.team6378.robot;
 
 import org.usfirst.frc.team6378.subsystems.Climber;
-import org.usfirst.frc.team6378.subsystems.PartialClimber;
 import org.usfirst.frc.team6378.utils.Mapping;
 import org.usfirst.frc.team6378.utils.Utils;
 
@@ -23,7 +22,7 @@ public class Robot extends IterativeRobot {
 
 	RobotDrive m_robot;
 	Climber m_climber;
-	PartialClimber m_partialClimber;
+	//PartialClimber m_partialClimber;
 
 	XboxController m_xBox;
 	Joystick m_jStick;
@@ -38,8 +37,7 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		
 		m_xBox = new XboxController(0);
-		
-		//m_climber = new Climber(Mapping.l_climb_motor, Mapping.r_climb_motor);
+
 		//m_jStick = new Joystick(1);
 		
 		System.out.println("initialized");
@@ -80,12 +78,12 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void testInit() {
-		m_partialClimber = new PartialClimber(Mapping.r_climb);
+		m_climber = new Climber(Mapping.l_climb, Mapping.r_climb);
 	}
 	
 	public void testPeriodic() {
 
-		m_partialClimber.climbUp(1);
+		m_climber.climbUp(1);
 		
 //		// Xbox controller with triggers
 //
