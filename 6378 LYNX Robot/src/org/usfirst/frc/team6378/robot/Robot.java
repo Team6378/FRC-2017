@@ -51,6 +51,7 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 
 		// Xbox controller with both sticks
+		// camera
 
 		/* CHANGING SPEEDS */
 		if (m_xBox.getYButton())
