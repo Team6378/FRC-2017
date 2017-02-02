@@ -37,7 +37,7 @@ public class Robot extends IterativeRobot {
 		
 		m_xBox = new XboxController(0);
 
-		//m_jStick = new Joystick(1);
+
 		
 		System.out.println("initialized");
 	}
