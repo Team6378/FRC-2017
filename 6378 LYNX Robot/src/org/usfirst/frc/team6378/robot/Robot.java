@@ -1,9 +1,11 @@
 package org.usfirst.frc.team6378.robot;
 
 import org.usfirst.frc.team6378.subsystems.Climber;
+
 import org.usfirst.frc.team6378.utils.Mapping;
 import org.usfirst.frc.team6378.utils.Utils;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -36,8 +38,10 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		
 		m_xBox = new XboxController(0);
-
-
+		
+		// -- camera stuff -- //
+		CameraServer server = CameraServer.getInstance();
+		server.startAutomaticCapture();
 		
 		System.out.println("initialized");
 	}
