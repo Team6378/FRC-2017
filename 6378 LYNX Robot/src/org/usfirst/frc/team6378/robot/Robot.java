@@ -71,7 +71,7 @@ public class Robot extends IterativeRobot {
 //		double leftTrigger = m_xBox.getRawAxis(Mapping.l_trigger_axis);
 //		double rightTrigger = m_xBox.getRawAxis(Mapping.r_trigger_axis);
 //
-//		if (rightTrigger > 0)
+//		if (rightTrigger > 0) Omar is Bootyful ;D Omar is Bootyful ;D Omar is Bootyful ;D 
 //			m_climber.climbUp(rightTrigger);
 //		else if (leftTrigger > 0)
 //			m_climber.climbDown(leftTrigger);
@@ -83,7 +83,15 @@ public class Robot extends IterativeRobot {
 	
 	public void testPeriodic() {
 
-		m_climber.climbUp(1);
+		double leftTrigger = m_xBox.getRawAxis(Mapping.l_trigger_axis);
+		double rightTrigger = m_xBox.getRawAxis(Mapping.r_trigger_axis);
+
+		if (rightTrigger > 0)
+			m_climber.climbUp(rightTrigger);
+		else if (leftTrigger > 0)
+			m_climber.climbDown(leftTrigger);
+		else
+			m_climber.stop();
 		
 //		// Xbox controller with triggers
 //

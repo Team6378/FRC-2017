@@ -27,4 +27,9 @@ public class Climber {
 		m_leftMotor.set(-mappedSpeed);
 		m_rightMotor.set(mappedSpeed);
 	}
+	
+	public void stop(){
+		m_leftMotor.set(0);
+		m_rightMotor.set(0);
+	}
 }
