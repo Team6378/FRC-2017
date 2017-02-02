@@ -4,6 +4,7 @@ import org.usfirst.frc.team6378.subsystems.Climber;
 import org.usfirst.frc.team6378.utils.Mapping;
 import org.usfirst.frc.team6378.utils.Utils;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
@@ -37,7 +38,8 @@ public class Robot extends IterativeRobot {
 		
 		m_xBox = new XboxController(0);
 
-
+		CameraServer cam = CameraServer.getInstance();
+		cam.startAutomaticCapture();
 		
 		System.out.println("initialized");
 	}
@@ -60,7 +62,7 @@ public class Robot extends IterativeRobot {
 			maxDriveSpeed = 0.75;
 
 		/* DRIVING */
-		double y = -m_xBox.getRawAxis(1);
+		double y = m_xBox.getRawAxis(1);
 		double x = -m_xBox.getRawAxis(4);
 		y = Utils.map(y, -1, 1, -maxDriveSpeed, maxDriveSpeed);
 		x = Utils.map(x, -1, 1, -maxDriveSpeed, maxDriveSpeed);
@@ -68,13 +70,13 @@ public class Robot extends IterativeRobot {
 		m_robot.arcadeDrive(y, x, squaredInputs);
 
 		/* CLIMBER */
-//		double leftTrigger = m_xBox.getRawAxis(Mapping.l_trigger_axis);
-//		double rightTrigger = m_xBox.getRawAxis(Mapping.r_trigger_axis);
-//
-//		if (rightTrigger > 0) Omar is Bootyful ;D Omar is Bootyful ;D Omar is Bootyful ;D 
-//			m_climber.climbUp(rightTrigger);
-//		else if (leftTrigger > 0)
-//			m_climber.climbDown(leftTrigger);
+		double leftTrigger = m_xBox.getRawAxis(Mapping.l_trigger_axis);
+		double rightTrigger = m_xBox.getRawAxis(Mapping.r_trigger_axis);
+
+		if (rightTrigger > 0)
+			m_climber.climbUp(rightTrigger);
+		else if (leftTrigger > 0)
+			m_climber.climbDown(leftTrigger);
 	}
 
 	public void testInit() {
