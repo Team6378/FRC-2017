@@ -1,6 +1,7 @@
 package org.usfirst.frc.team6378.robot;
 
 import org.usfirst.frc.team6378.subsystems.Climber;
+
 import org.usfirst.frc.team6378.utils.Mapping;
 import org.usfirst.frc.team6378.utils.Utils;
 
@@ -38,8 +39,10 @@ public class Robot extends IterativeRobot {
 		
 		m_xBox = new XboxController(0);
 
-		CameraServer cam = CameraServer.getInstance();
-		cam.startAutomaticCapture();
+		
+		// -- camera stuff -- //
+		CameraServer server = CameraServer.getInstance();
+		server.startAutomaticCapture();
 		
 		System.out.println("initialized");
 	}
@@ -53,7 +56,6 @@ public class Robot extends IterativeRobot {
 	public void teleopPeriodic() {
 
 		// Xbox controller with both sticks
-		// camera
 
 		/* CHANGING SPEEDS */
 		if (m_xBox.getYButton())
