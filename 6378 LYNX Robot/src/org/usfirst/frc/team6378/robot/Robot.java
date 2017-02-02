@@ -22,7 +22,6 @@ public class Robot extends IterativeRobot {
 
 	RobotDrive m_robot;
 	Climber m_climber;
-	//PartialClimber m_partialClimber;
 
 	XboxController m_xBox;
 	Joystick m_jStick;
