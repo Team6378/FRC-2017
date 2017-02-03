@@ -1,7 +1,6 @@
 package org.usfirst.frc.team6378.robot;
 
 import org.usfirst.frc.team6378.subsystems.Climber;
-
 import org.usfirst.frc.team6378.utils.Mapping;
 import org.usfirst.frc.team6378.utils.Utils;
 
@@ -36,14 +35,13 @@ public class Robot extends IterativeRobot {
 	final String customAuto = "My Auto";
 
 	public void robotInit() {
-		
-		m_xBox = new XboxController(0);
 
-		
-		// -- camera stuff -- //
+		// Camera setup
 		CameraServer server = CameraServer.getInstance();
 		server.startAutomaticCapture();
-		
+
+		m_xBox = new XboxController(0);
+
 		System.out.println("initialized");
 	}
 
@@ -51,8 +49,10 @@ public class Robot extends IterativeRobot {
 		m_robot = new RobotDrive(Mapping.fl, Mapping.bl, Mapping.fr, Mapping.br);
 		m_robot.setExpiration(0.1);
 		m_robot.setSafetyEnabled(true);
+
+		m_climber = new Climber(Mapping.l_climb, Mapping.r_climb);
 	}
-	
+
 	public void teleopPeriodic() {
 
 		// Xbox controller with both sticks
@@ -82,36 +82,24 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void testInit() {
-		m_climber = new Climber(Mapping.l_climb, Mapping.r_climb);
+
 	}
-	
+
 	public void testPeriodic() {
 
+		// // Xbox controller with triggers
 		double leftTrigger = m_xBox.getRawAxis(Mapping.l_trigger_axis);
 		double rightTrigger = m_xBox.getRawAxis(Mapping.r_trigger_axis);
+		
+		double y = 0;
+		double x = -m_xBox.getRawAxis(4);
 
 		if (rightTrigger > 0)
-			m_climber.climbUp(rightTrigger);
+			y = -rightTrigger;
 		else if (leftTrigger > 0)
-			m_climber.climbDown(leftTrigger);
-		else
-			m_climber.stop();
+			y = leftTrigger;
 		
-//		// Xbox controller with triggers
-//
-//		// BEFORE RUNNING THIS CODE:
-//		// Make sure that an un-touched trigger at its default position has an
-//		// Axis value of ZERO. Otherwise, the robot will go out of control!
-//		double leftTrigger = m_xBox.getTriggerAxis(Hand.kLeft);
-//		double rightTrigger = m_xBox.getTriggerAxis(Hand.kRight);
-//
-//		if (rightTrigger != 0) {
-//			m_robot.arcadeDrive(rightTrigger, m_xBox.getRawAxis(4), true);
-//		}
-//
-//		else if (leftTrigger != 0) {
-//			m_robot.arcadeDrive(-leftTrigger, m_xBox.getRawAxis(4), true);
-//		}
+		m_robot.arcadeDrive(y, x, squaredInputs);
 	}
 
 	/**
