@@ -39,18 +39,24 @@ public class Robot extends IterativeRobot {
 		// Camera setup
 		CameraServer server = CameraServer.getInstance();
 		server.startAutomaticCapture();
+		
+		// Robot Drive
+		m_robot = new RobotDrive(Mapping.fl, Mapping.bl, Mapping.fr, Mapping.br);
+		m_robot.setExpiration(0.1);
+		m_robot.setSafetyEnabled(true);
+		
+		// Subsystems
+		m_climber = new Climber(Mapping.l_climb, Mapping.r_climb);
 
+		// Controllers
 		m_xBox = new XboxController(0);
+		//m_jStick = new Joystick(1);
 
 		System.out.println("initialized");
 	}
 
 	public void teleopInit() {
-		m_robot = new RobotDrive(Mapping.fl, Mapping.bl, Mapping.fr, Mapping.br);
-		m_robot.setExpiration(0.1);
-		m_robot.setSafetyEnabled(true);
-
-		m_climber = new Climber(Mapping.l_climb, Mapping.r_climb);
+		
 	}
 
 	public void teleopPeriodic() {
@@ -87,6 +93,13 @@ public class Robot extends IterativeRobot {
 
 	public void testPeriodic() {
 
+		/* CHANGING SPEEDS */
+		if (m_xBox.getYButton())
+			maxDriveSpeed = 1;
+		else if (m_xBox.getXButton())
+			maxDriveSpeed = 0.75;
+
+		/* DRIVING */
 		// // Xbox controller with triggers
 		double leftTrigger = m_xBox.getRawAxis(Mapping.l_trigger_axis);
 		double rightTrigger = m_xBox.getRawAxis(Mapping.r_trigger_axis);
@@ -98,6 +111,9 @@ public class Robot extends IterativeRobot {
 			y = -rightTrigger;
 		else if (leftTrigger > 0)
 			y = leftTrigger;
+		
+		y = Utils.map(y, -1, 1, -maxDriveSpeed, maxDriveSpeed);
+		x = Utils.map(x, -1, 1, -maxDriveSpeed, maxDriveSpeed);
 		
 		m_robot.arcadeDrive(y, x, squaredInputs);
 	}
