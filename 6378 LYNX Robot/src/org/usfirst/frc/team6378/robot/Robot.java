@@ -31,8 +31,8 @@ public class Robot extends IterativeRobot {
 
 	/* AUTO MODES */
 	String autoSelected;
-	final String defaultAuto = "Default";
-	final String customAuto = "My Auto";
+	final String defaultAuto = "default";
+	final String reverseAuto = "reverse";
 
 	public void robotInit() {
 
@@ -132,12 +132,12 @@ public class Robot extends IterativeRobot {
 
 	public void autonomousPeriodic() {
 		switch (autoSelected) {
-		case customAuto:
-			// Put custom auto code here
+		case reverseAuto:
+			m_robot.arcadeDrive(0.6, 0);
 			break;
 		case defaultAuto:
 		default:
-			// Put default auto code here
+			m_robot.arcadeDrive(-0.4, 0);
 			break;
 		}
 	}
