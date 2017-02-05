@@ -1,6 +1,6 @@
 package org.usfirst.frc.team6378.robot;
 
-import org.usfirst.frc.team6378.subsystems.Climber;
+import org.usfirst.frc.team6378.subsystems.Winch;
 import org.usfirst.frc.team6378.utils.Mapping;
 import org.usfirst.frc.team6378.utils.Utils;
 
@@ -16,7 +16,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * The main class that controls the robot.
  * 
- * @author FRC 6378
+ * @author Omar Ashqar
+ * @author Prisha Rathi
  *
  */
 public class Robot extends IterativeRobot {
@@ -24,10 +25,10 @@ public class Robot extends IterativeRobot {
 	final boolean squaredInputs = true;
 
 	Timer m_timer;
-	
+
 	private AnalogGyro gyro;
 	RobotDrive m_robot;
-	Climber m_climber;
+	Winch m_winch;
 
 	XboxController m_xBox;
 	Joystick m_jStick;
@@ -48,29 +49,29 @@ public class Robot extends IterativeRobot {
 
 	public void robotInit() {
 
-		m_timer = new Timer();
-		
-		// Gyro
-		gyro = new AnalogGyro(Mapping.gyro);
-		gyro.setSensitivity(kVoltsPerDegreePerSecond);
-
-		// Camera setup
-		CameraServer server = CameraServer.getInstance();
-		server.startAutomaticCapture();
-
 		// Robot Drive
 		m_robot = new RobotDrive(Mapping.fl, Mapping.bl, Mapping.fr, Mapping.br);
 		m_robot.setExpiration(0.1);
 		m_robot.setSafetyEnabled(true);
 
 		// Subsystems
-		m_climber = new Climber(Mapping.l_climb, Mapping.r_climb);
+		m_winch = new Winch(Mapping.l_climb, Mapping.r_climb);
+
+		CameraServer server = CameraServer.getInstance();
+		server.startAutomaticCapture();
+
+		// Gyro
+		gyro = new AnalogGyro(Mapping.gyro);
+		gyro.setSensitivity(kVoltsPerDegreePerSecond);
 
 		// Controllers
 		m_xBox = new XboxController(0);
 		// m_jStick = new Joystick(1);
 
-		System.out.println("initialized");
+		// Misc
+		m_timer = new Timer();
+
+		System.out.println("> Robot initialized");
 	}
 
 	public void teleopInit() {
@@ -88,8 +89,8 @@ public class Robot extends IterativeRobot {
 			maxDriveSpeed = 0.75;
 
 		/* DRIVING */
-		double y = m_xBox.getRawAxis(1);
-		double x = -m_xBox.getRawAxis(4);
+		double y = m_xBox.getRawAxis(Mapping.l_y_axis);
+		double x = -m_xBox.getRawAxis(Mapping.r_x_axis);
 		y = Utils.map(y, -1, 1, -maxDriveSpeed, maxDriveSpeed);
 		x = Utils.map(x, -1, 1, -maxDriveSpeed, maxDriveSpeed);
 
@@ -100,13 +101,13 @@ public class Robot extends IterativeRobot {
 		double rightTrigger = m_xBox.getRawAxis(Mapping.r_trigger_axis);
 
 		if (rightTrigger > 0)
-			m_climber.climbUp(rightTrigger);
+			m_winch.climbForward(rightTrigger);
 		else if (leftTrigger > 0)
-			m_climber.climbDown(leftTrigger);
+			m_winch.climbReverse(leftTrigger);
 	}
 
 	public void testInit() {
-
+		gyro.reset();
 	}
 
 	public void testPeriodic() {
@@ -146,7 +147,7 @@ public class Robot extends IterativeRobot {
 			m_robot.arcadeDrive(y, turningValue, squaredInputs);
 		else {
 			m_robot.arcadeDrive(y, x, squaredInputs);
-			angleSetPoint = gyro.getAngle();
+			gyro.reset(); // Set the current heading to zero
 		}
 
 	}
@@ -161,7 +162,7 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
-		
+
 		m_timer.reset(); // Resets back to zero
 		m_timer.start(); // Starts the timer
 	}
