@@ -138,7 +138,7 @@ public class Robot extends IterativeRobot {
 		x = Utils.map(x, -1, 1, -maxDriveSpeed, maxDriveSpeed);
 
 		double turningValue = (angleSetPoint - gyro.getAngle()) * kP;
-
+		
 		// Invert the direction of the turn if we are going backwards
 		// TODO Might have to change sign on y value
 		turningValue = Math.copySign(turningValue, -y);
@@ -150,6 +150,8 @@ public class Robot extends IterativeRobot {
 			gyro.reset(); // Set the current heading to zero
 		}
 
+		SmartDashboard.putNumber("Gyro angle", gyro.getAngle());
+		SmartDashboard.putNumber("Gyro Delta", turningValue);
 	}
 
 	/**
