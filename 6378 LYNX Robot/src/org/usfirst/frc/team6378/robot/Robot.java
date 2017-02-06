@@ -4,6 +4,7 @@ import org.usfirst.frc.team6378.subsystems.Winch;
 import org.usfirst.frc.team6378.utils.Mapping;
 import org.usfirst.frc.team6378.utils.Utils;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -26,7 +27,7 @@ public class Robot extends IterativeRobot {
 
 	Timer m_timer;
 
-	private AnalogGyro gyro;
+	private ADXRS450_Gyro gyro;
 	RobotDrive m_robot;
 	Winch m_winch;
 
@@ -61,8 +62,7 @@ public class Robot extends IterativeRobot {
 		server.startAutomaticCapture();
 
 		// Gyro
-		gyro = new AnalogGyro(Mapping.gyro);
-		gyro.setSensitivity(kVoltsPerDegreePerSecond);
+		gyro = new ADXRS450_Gyro();
 
 		// Controllers
 		m_xBox = new XboxController(0);
