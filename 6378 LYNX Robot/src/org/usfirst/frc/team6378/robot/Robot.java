@@ -150,8 +150,8 @@ public class Robot extends IterativeRobot {
 			gyro.reset(); // Set the current heading to zero
 		}
 
-		SmartDashboard.putNumber("Gyro angle", gyro.getAngle());
-		SmartDashboard.putNumber("Gyro Delta", turningValue);
+		System.out.println(">>> Angle: " + gyro.getAngle());
+		System.out.println(">>> Turning: " + turningValue);
 	}
 
 	/**
@@ -179,6 +179,24 @@ public class Robot extends IterativeRobot {
 			m_robot.arcadeDrive(-0.6, 0);
 			break;
 		}
+	}
+	
+	@Override
+	public void disabledInit() {
+		// TODO Auto-generated method stub
+		super.disabledInit();
+	}
+	
+	@Override
+	public void disabledPeriodic() {
+		// TODO Auto-generated method stub
+		super.disabledPeriodic();
+	}
+	
+	@Override
+	public void robotPeriodic() {
+		// TODO Auto-generated method stub
+		super.robotPeriodic();
 	}
 
 }
