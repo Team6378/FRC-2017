@@ -14,7 +14,7 @@ public class Utils {
 	 * @param in_min Min from input range
 	 * @param in_max Max from input range
 	 * @param out_min Min from output range
-	 * @param out_max Max from outut range
+	 * @param out_max Max from output range
 	 * @return
 	 */
 	public static double map(double x, double in_min, double in_max, double out_min, double out_max) {
