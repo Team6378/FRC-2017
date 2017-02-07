@@ -1,0 +1,7 @@
+*.class
+
+# Packages #
+*.jar
+
+/sysProps.xml
+/bin/
