@@ -5,13 +5,13 @@ import org.usfirst.frc.team6378.utils.Mapping;
 import org.usfirst.frc.team6378.utils.Utils;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -23,28 +23,30 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
-	final boolean squaredInputs = true;
+	private final double DRIVE_SPEED_FAST = 1;
+	private final double DRIVE_SPEED_SLOW = 0.75;
+	
+	private double m_driveSpeed = 1;
+	
+	// Robot Drive
+	private RobotDrive m_robot;
 
-	Timer m_timer;
+	// Subsystems
+	private Winch m_winch;
+	private CameraServer camera;
+	private Gyro gyro;
 
-	private ADXRS450_Gyro gyro;
-	RobotDrive m_robot;
-	Winch m_winch;
-
-	XboxController m_xBox;
-	Joystick m_jStick;
-
-	double maxDriveSpeed = 1;
+	// Controllers
+	private XboxController m_xBox;
+	private Joystick m_jStick;
+	
+	// Misc
+	private Timer m_timer;
 
 	/* AUTO MODES */
-	String autoSelected;
-	final String defaultAuto = "default";
-	final String reverseAuto = "reverse";
-
-	// gyro calibration constant, may need to be adjusted;
-	// gyro value of 360 is set to correspond to one full revolution
-	private static final double kVoltsPerDegreePerSecond = 0.0128;
-	private static final double kP = 0.005; // propotional turning constant
+	private String autoSelected;
+	private final String defaultAuto = "default";
+	private final String reverseAuto = "reverse";
 
 	private double angleSetPoint = 0.0;
 
@@ -52,16 +54,15 @@ public class Robot extends IterativeRobot {
 
 		// Robot Drive
 		m_robot = new RobotDrive(Mapping.fl, Mapping.bl, Mapping.fr, Mapping.br);
-		m_robot.setExpiration(0.1);
+		m_robot.setExpiration(0.5);
 		m_robot.setSafetyEnabled(true);
 
 		// Subsystems
 		m_winch = new Winch(Mapping.l_climb, Mapping.r_climb);
 
-		CameraServer server = CameraServer.getInstance();
-		server.startAutomaticCapture();
+		camera = CameraServer.getInstance();
+		camera.startAutomaticCapture();
 
-		// Gyro
 		gyro = new ADXRS450_Gyro();
 
 		// Controllers
@@ -71,7 +72,7 @@ public class Robot extends IterativeRobot {
 		// Misc
 		m_timer = new Timer();
 
-		System.out.println("> Robot initialized");
+		System.out.println(">> Robot initialized");
 	}
 
 	public void teleopInit() {
@@ -84,26 +85,23 @@ public class Robot extends IterativeRobot {
 
 		/* CHANGING SPEEDS */
 		if (m_xBox.getYButton())
-			maxDriveSpeed = 1;
+			m_driveSpeed = 1;
 		else if (m_xBox.getXButton())
-			maxDriveSpeed = 0.75;
+			m_driveSpeed = 0.75;
 
 		/* DRIVING */
 		double y = m_xBox.getRawAxis(Mapping.l_y_axis);
 		double x = -m_xBox.getRawAxis(Mapping.r_x_axis);
-		y = Utils.map(y, -1, 1, -maxDriveSpeed, maxDriveSpeed);
-		x = Utils.map(x, -1, 1, -maxDriveSpeed, maxDriveSpeed);
+		y = Utils.map(y, -1, 1, -m_driveSpeed, m_driveSpeed);
+		x = Utils.map(x, -1, 1, -m_driveSpeed, m_driveSpeed);
 
-		m_robot.arcadeDrive(y, x, squaredInputs);
+		m_robot.arcadeDrive(y, x, true);
 
 		/* CLIMBER */
 		double leftTrigger = m_xBox.getRawAxis(Mapping.l_trigger_axis);
 		double rightTrigger = m_xBox.getRawAxis(Mapping.r_trigger_axis);
-
-		if (rightTrigger > 0)
-			m_winch.climbForward(rightTrigger);
-		else if (leftTrigger > 0)
-			m_winch.climbReverse(leftTrigger);
+		
+		m_winch.climb(leftTrigger, rightTrigger);
 	}
 
 	public void testInit() {
@@ -114,9 +112,9 @@ public class Robot extends IterativeRobot {
 
 		/* CHANGING SPEEDS */
 		if (m_xBox.getYButton())
-			maxDriveSpeed = 1;
+			m_driveSpeed = DRIVE_SPEED_FAST;
 		else if (m_xBox.getXButton())
-			maxDriveSpeed = 0.75;
+			m_driveSpeed = DRIVE_SPEED_SLOW;
 
 		/* DRIVING */
 
@@ -134,19 +132,19 @@ public class Robot extends IterativeRobot {
 		else if (leftTrigger > 0)
 			y = leftTrigger;
 
-		y = Utils.map(y, -1, 1, -maxDriveSpeed, maxDriveSpeed);
-		x = Utils.map(x, -1, 1, -maxDriveSpeed, maxDriveSpeed);
+		y = Utils.map(y, -1, 1, -m_driveSpeed, m_driveSpeed);
+		x = Utils.map(x, -1, 1, -m_driveSpeed, m_driveSpeed);
 
-		double turningValue = (angleSetPoint - gyro.getAngle()) * kP;
-		
+		double turningValue = (angleSetPoint - gyro.getAngle());
+
 		// Invert the direction of the turn if we are going backwards
 		// TODO Might have to change sign on y value
 		turningValue = Math.copySign(turningValue, -y);
 
 		if (x == 0)
-			m_robot.arcadeDrive(y, turningValue, squaredInputs);
+			m_robot.arcadeDrive(y, turningValue, true);
 		else {
-			m_robot.arcadeDrive(y, x, squaredInputs);
+			m_robot.arcadeDrive(y, x, true);
 			gyro.reset(); // Set the current heading to zero
 		}
 
@@ -180,23 +178,14 @@ public class Robot extends IterativeRobot {
 			break;
 		}
 	}
-	
-	@Override
+
 	public void disabledInit() {
-		// TODO Auto-generated method stub
-		super.disabledInit();
 	}
-	
-	@Override
+
 	public void disabledPeriodic() {
-		// TODO Auto-generated method stub
-		super.disabledPeriodic();
 	}
-	
-	@Override
+
 	public void robotPeriodic() {
-		// TODO Auto-generated method stub
-		super.robotPeriodic();
 	}
 
 }

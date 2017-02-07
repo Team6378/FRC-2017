@@ -17,23 +17,50 @@ public class Winch {
 
 	private SpeedController m_leftMotor, m_rightMotor;
 
+	/**
+	 * Constructs a Winch object that controls the robot's climbing mechanism.
+	 * 
+	 * @param leftPin
+	 *            PWM pin for the left motor
+	 * @param rightPin
+	 *            PWM pin for the right motor
+	 */
 	public Winch(int leftPin, int rightPin) {
 		m_leftMotor = new VictorSP(leftPin);
 		m_rightMotor = new VictorSP(rightPin);
 	}
 
-	public void climbForward(double speed) {
+	/**
+	 * Drives the winch with the provided values for speed
+	 * 
+	 * @param leftTrigger
+	 *            Range: 0 to 1 of the left trigger axis
+	 * @param rightTrigger
+	 *            Range: 0 to 1 of the right trigger axis
+	 */
+	public void climb(double leftTrigger, double rightTrigger) {
+		if (rightTrigger > 0)
+			setSpeed(rightTrigger);
+		else if (leftTrigger > 0)
+			setSpeed(-leftTrigger);
+	}
+
+	/**
+	 * Drives the winch at the given speed
+	 * 
+	 * @param speed
+	 *            Range: -1 to 1, representing full reverse to full forward
+	 *            respectively
+	 */
+	public void setSpeed(double speed) {
 		double mappedSpeed = Utils.map(speed, 0, 1, 0, maxSpeed);
 		m_leftMotor.set(mappedSpeed);
 		m_rightMotor.set(-mappedSpeed);
 	}
 
-	public void climbReverse(double speed) {
-		double mappedSpeed = Utils.map(speed, 0, 1, 0, maxSpeed);
-		m_leftMotor.set(-mappedSpeed);
-		m_rightMotor.set(mappedSpeed);
-	}
-
+	/**
+	 * Stops the climbing mechanism
+	 */
 	public void stop() {
 		m_leftMotor.set(0);
 		m_rightMotor.set(0);
