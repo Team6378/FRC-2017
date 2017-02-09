@@ -151,9 +151,9 @@ public class Robot extends IterativeRobot {
 			gyro.reset(); // Set the current heading to zero
 		}
 
-		SmartDashboard.putNumber("Current angle", gyro.getAngle());
-		SmartDashboard.putNumber("Delta from setpoint angle", turningValue);
-		SmartDashboard.putNumber("Distance", encoder.getDistance());
+		SmartDashboard.putString("DB/String 0", "Current angle: "+ gyro.getAngle());
+		SmartDashboard.putString("DB/String 1", "Delta: "+ turningValue);
+		SmartDashboard.putString("DB/String 2", "Distance: "+ encoder.getDistance());
 	}
 
 	/**
