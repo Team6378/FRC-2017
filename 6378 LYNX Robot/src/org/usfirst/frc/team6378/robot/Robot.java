@@ -6,9 +6,12 @@ import org.usfirst.frc.team6378.utils.Utils;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.RobotDrive;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
@@ -33,8 +36,8 @@ public class Robot extends IterativeRobot {
 
 	// Subsystems
 	private Winch m_winch;
-	private CameraServer camera;
 	private Gyro gyro;
+	private Encoder encoder;
 
 	// Controllers
 	private XboxController m_xBox;
@@ -51,7 +54,9 @@ public class Robot extends IterativeRobot {
 	private double angleSetPoint = 0.0;
 
 	public void robotInit() {
-
+		
+		CameraServer.getInstance().startAutomaticCapture("LYNX Camera", 0);
+		
 		// Robot Drive
 		m_robot = new RobotDrive(Mapping.fl, Mapping.bl, Mapping.fr, Mapping.br);
 		m_robot.setExpiration(0.5);
@@ -59,11 +64,8 @@ public class Robot extends IterativeRobot {
 
 		// Subsystems
 		m_winch = new Winch(Mapping.l_climb, Mapping.r_climb);
-
-		camera = CameraServer.getInstance();
-		camera.startAutomaticCapture();
-
-		gyro = new ADXRS450_Gyro();
+		gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
+		encoder = new Encoder(0, 1, false, EncodingType.k4X);
 
 		// Controllers
 		m_xBox = new XboxController(0);
@@ -106,6 +108,7 @@ public class Robot extends IterativeRobot {
 
 	public void testInit() {
 		gyro.reset();
+		encoder.reset();
 	}
 
 	public void testPeriodic() {
@@ -148,8 +151,9 @@ public class Robot extends IterativeRobot {
 			gyro.reset(); // Set the current heading to zero
 		}
 
-		System.out.println(">>> Angle: " + gyro.getAngle());
-		System.out.println(">>> Turning: " + turningValue);
+		SmartDashboard.putNumber("Current angle", gyro.getAngle());
+		SmartDashboard.putNumber("Delta from setpoint angle", turningValue);
+		SmartDashboard.putNumber("Distance", encoder.getDistance());
 	}
 
 	/**
