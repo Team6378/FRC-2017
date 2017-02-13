@@ -43,6 +43,8 @@ public class Winch {
 			setSpeed(rightTrigger);
 		else if (leftTrigger > 0)
 			setSpeed(-leftTrigger);
+		else
+			stop();
 	}
 
 	/**
