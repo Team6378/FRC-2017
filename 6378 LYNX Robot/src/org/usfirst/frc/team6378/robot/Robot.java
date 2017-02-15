@@ -5,17 +5,13 @@ import org.usfirst.frc.team6378.subsystems.Winch;
 import org.usfirst.frc.team6378.utils.Mapping;
 import org.usfirst.frc.team6378.utils.Utils;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.RobotDrive;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -27,6 +23,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
+	double increment = 0.01;
+	
 	private final double DRIVE_SPEED_FAST = 1;
 	private final double DRIVE_SPEED_SLOW = 0.75;
 
@@ -51,7 +49,6 @@ public class Robot extends IterativeRobot {
 	private final String defaultAuto = "default";
 	private final String reverseAuto = "reverse";
 
-	private double angleSetPoint = 0.0;
 
 	public void robotInit() {
 
@@ -68,7 +65,7 @@ public class Robot extends IterativeRobot {
 
 		// Controllers
 		m_xBox = new XboxController(0);
-		// m_jStick = new Joystick(1);
+		m_jStick = new Joystick(1);
 
 		// Misc
 		m_timer = new Timer();
@@ -86,9 +83,9 @@ public class Robot extends IterativeRobot {
 
 		/* CHANGING SPEEDS */
 		if (m_xBox.getYButton())
-			m_driveSpeed = 1;
+			m_driveSpeed = DRIVE_SPEED_FAST;
 		else if (m_xBox.getXButton())
-			m_driveSpeed = 0.75;
+			m_driveSpeed = DRIVE_SPEED_SLOW;
 		else if (m_xBox.getAButton())
 			encoder.reset();
 
@@ -106,7 +103,7 @@ public class Robot extends IterativeRobot {
 
 		m_winch.climb(leftTrigger, rightTrigger);
 
-		SmartDashboard.putString("DB/String 2", "Distance: " + encoder.getDistance());	
+		SmartDashboard.putString("DB/String 1", "Distance: " + encoder.getDistance());	
 	}
 
 	public void testInit() {
@@ -117,11 +114,27 @@ public class Robot extends IterativeRobot {
 
 		/* CHANGING SPEEDS */
 		if (m_xBox.getYButton())
-			m_driveSpeed = 1;
+			m_driveSpeed = DRIVE_SPEED_FAST;
 		else if (m_xBox.getXButton())
-			m_driveSpeed = 0.75;
+			m_driveSpeed = DRIVE_SPEED_SLOW;
 		else if (m_xBox.getAButton())
 			m_robot.resetGyro();
+		
+		/* Tuning PID */
+		if (m_jStick.getRawButton(7))
+			m_robot.addP(-increment);
+		else if (m_jStick.getRawButton(8))
+			m_robot.addP(increment);
+		
+		else if (m_jStick.getRawButton(9))
+			m_robot.addI(-increment);
+		else if (m_jStick.getRawButton(10))
+			m_robot.addI(increment);
+		
+		else if (m_jStick.getRawButton(11))
+			m_robot.addD(-increment);
+		else if (m_jStick.getRawButton(12))
+			m_robot.addD(increment);
 		
 		/* DRIVING */
 		double y = -m_xBox.getRawAxis(Mapping.l_y_axis);
