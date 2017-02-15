@@ -23,8 +23,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
-	double increment = 0.01;
-	
+	double increment = 0.0001;
+
 	private final double DRIVE_SPEED_FAST = 1;
 	private final double DRIVE_SPEED_SLOW = 0.75;
 
@@ -48,7 +48,6 @@ public class Robot extends IterativeRobot {
 	private String autoSelected;
 	private final String defaultAuto = "default";
 	private final String reverseAuto = "reverse";
-
 
 	public void robotInit() {
 
@@ -103,7 +102,7 @@ public class Robot extends IterativeRobot {
 
 		m_winch.climb(leftTrigger, rightTrigger);
 
-		SmartDashboard.putString("DB/String 1", "Distance: " + encoder.getDistance());	
+		SmartDashboard.putString("DB/String 1", "Distance: " + encoder.getDistance());
 	}
 
 	public void testInit() {
@@ -119,29 +118,31 @@ public class Robot extends IterativeRobot {
 			m_driveSpeed = DRIVE_SPEED_SLOW;
 		else if (m_xBox.getAButton())
 			m_robot.resetGyro();
-		
+
 		/* Tuning PID */
 		if (m_jStick.getRawButton(7))
 			m_robot.addP(-increment);
 		else if (m_jStick.getRawButton(8))
 			m_robot.addP(increment);
-		
+
 		else if (m_jStick.getRawButton(9))
 			m_robot.addI(-increment);
 		else if (m_jStick.getRawButton(10))
 			m_robot.addI(increment);
-		
+
 		else if (m_jStick.getRawButton(11))
 			m_robot.addD(-increment);
 		else if (m_jStick.getRawButton(12))
 			m_robot.addD(increment);
-		
+
+		m_robot.setMultiplier(Utils.map(m_jStick.getRawAxis(3), -1, 1, 0, 1));
+
 		/* DRIVING */
 		double y = -m_xBox.getRawAxis(Mapping.l_y_axis);
 		y = Utils.map(y, -1, 1, -m_driveSpeed, m_driveSpeed);
-		
+
 		m_robot.driveStraight(y);
-		
+
 		m_robot.tick();
 	}
 

@@ -18,6 +18,8 @@ public class DriveTrain extends RobotDrive {
 	private PIDGyroOutput pidGyroOutput;
 	private PIDController pidGyroController;
 	private double kPGyro = 0.0, kIGyro = 0.0, kDGyro = 0.0;
+	
+	private double multiplier = 1;
 
 	public DriveTrain(int frontLeftMotor, int rearLeftMotor, int frontRightMotor, int rearRightMotor) {
 		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
@@ -30,11 +32,13 @@ public class DriveTrain extends RobotDrive {
 		pidGyroOutput = new PIDGyroOutput();
 
 		pidGyroController = new PIDController(kPGyro, kIGyro, kDGyro, pidGyro, pidGyroOutput);
+		
+		pidGyroController.setSetpoint(0);
 		pidGyroController.enable();
 	}
 
 	public void driveStraight(double y) {
-		drive(y, pidGyroOutput.getOutput());
+		drive(y, pidGyroOutput.getOutput() * multiplier);
 	}
 
 	public void resetGyro() {
@@ -62,6 +66,10 @@ public class DriveTrain extends RobotDrive {
 
 	public void addD(double x) {
 		pidGyroController.setPID(pidGyroController.getP(), pidGyroController.getI(), pidGyroController.getD() + x);
+	}
+	
+	public void setMultiplier(double multiplier){
+		this.multiplier = multiplier;
 	}
 
 }
