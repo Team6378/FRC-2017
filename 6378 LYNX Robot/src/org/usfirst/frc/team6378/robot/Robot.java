@@ -35,8 +35,9 @@ public class Robot extends IterativeRobot {
 
 	// Subsystems
 	private Winch m_winch;
-	private Encoder encoder;
 
+	boolean goddanitthisisabadidea = false;
+	
 	// Controllers
 	private XboxController m_xBox;
 	private Joystick m_jStick;
@@ -60,11 +61,10 @@ public class Robot extends IterativeRobot {
 
 		// Subsystems
 		m_winch = new Winch(Mapping.l_climb, Mapping.r_climb);
-		encoder = new Encoder(0, 1, false, EncodingType.k4X);
 
 		// Controllers
 		m_xBox = new XboxController(0);
-		m_jStick = new Joystick(1);
+		// m_jStick = new Joystick(1);
 
 		// Misc
 		m_timer = new Timer();
@@ -73,7 +73,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void teleopInit() {
-		encoder.reset();
+		m_robot.resetEncoder();
 	}
 
 	public void teleopPeriodic() {
@@ -86,7 +86,14 @@ public class Robot extends IterativeRobot {
 		else if (m_xBox.getXButton())
 			m_driveSpeed = DRIVE_SPEED_SLOW;
 		else if (m_xBox.getAButton())
-			encoder.reset();
+			m_driveSpeed = 0.5;
+		else if (m_xBox.getBButton())
+			m_robot.resetEncoder();
+		
+		else if (m_xBox.getRawButton(6))
+			goddanitthisisabadidea = false;
+		else if (m_xBox.getRawButton(5))
+			goddanitthisisabadidea = true;
 
 		/* DRIVING */
 		double y = -m_xBox.getRawAxis(Mapping.l_y_axis);
@@ -102,11 +109,11 @@ public class Robot extends IterativeRobot {
 
 		m_winch.climb(leftTrigger, rightTrigger);
 
-		SmartDashboard.putString("DB/String 1", "Distance: " + encoder.getDistance());
+		m_robot.tick();
 	}
 
 	public void testInit() {
-		encoder.reset();
+		m_robot.resetEncoder();
 	}
 
 	public void testPeriodic() {
@@ -156,9 +163,6 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		autoSelected = SmartDashboard.getString("Auto Selector", defaultAuto);
 		System.out.println("Auto selected: " + autoSelected);
-
-		m_timer.reset(); // Resets back to zero
-		m_timer.start(); // Starts the timer
 	}
 
 	public void autonomousPeriodic() {
@@ -168,7 +172,7 @@ public class Robot extends IterativeRobot {
 			break;
 		case defaultAuto:
 		default:
-			m_robot.arcadeDrive(-0.6, 0);
+			m_robot.driveAuto();
 			break;
 		}
 	}
@@ -177,6 +181,8 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledPeriodic() {
+		if (goddanitthisisabadidea)
+			m_winch.climb(0.3, 0.3);
 	}
 
 	public void robotPeriodic() {
