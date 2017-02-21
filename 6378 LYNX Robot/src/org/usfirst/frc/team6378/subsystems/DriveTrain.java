@@ -28,6 +28,10 @@ public class DriveTrain extends RobotDrive {
 	private boolean turn180 = false;
 	private double startedTurningAngle = 0.0;
 
+	/* AUTO MODES */
+	private final String defaultAuto = "default";
+	private final String reverseAuto = "reverse";
+
 	public DriveTrain(int frontLeftMotor, int rearLeftMotor, int frontRightMotor, int rearRightMotor) {
 		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
 
@@ -70,7 +74,7 @@ public class DriveTrain extends RobotDrive {
 		double error = Math.abs(180 - gyro.getAngle());
 		if (error < 10)
 			turn180 = false;
-		
+
 		SmartDashboard.putString("DB/String 1", "turn?: " + turn180);
 	}
 
@@ -81,10 +85,18 @@ public class DriveTrain extends RobotDrive {
 			startedTurningAngle = gyro.getAngle();
 		}
 	}
-	
-	public void driveAuto(){
-		if (Math.abs(encoder.getDistance()) < 1700)
-			drive(0.5, 0);
+
+	public void driveAuto(String autoSelected) {
+		switch (autoSelected) {
+		case reverseAuto:
+			// eyyo
+			break;
+		case defaultAuto:
+		default:
+			if (Math.abs(encoder.getDistance()) < 1700)
+				drive(0.5, 0);
+			break;
+		}
 	}
 
 	public void tick() {
@@ -92,13 +104,19 @@ public class DriveTrain extends RobotDrive {
 		maybe180();
 
 		SmartDashboard.putString("DB/String 2", "Distance: " + encoder.getDistance());
-//		SmartDashboard.putString("DB/String 2", "Current angle: " + gyro.getAngle());
-//		SmartDashboard.putString("DB/String 3", "Setpoint: " + pidGyro.getSetpoint());
-//		SmartDashboard.putString("DB/String 4", "PID Output: " + pidGyroOutput.getOutput());
-//
-//		SmartDashboard.putString("DB/String 6", "P: " + pidGyroController.getP());
-//		SmartDashboard.putString("DB/String 7", "I: " + pidGyroController.getI());
-//		SmartDashboard.putString("DB/String 8", "D: " + pidGyroController.getD());
+		// SmartDashboard.putString("DB/String 2", "Current angle: " +
+		// gyro.getAngle());
+		// SmartDashboard.putString("DB/String 3", "Setpoint: " +
+		// pidGyro.getSetpoint());
+		// SmartDashboard.putString("DB/String 4", "PID Output: " +
+		// pidGyroOutput.getOutput());
+		//
+		// SmartDashboard.putString("DB/String 6", "P: " +
+		// pidGyroController.getP());
+		// SmartDashboard.putString("DB/String 7", "I: " +
+		// pidGyroController.getI());
+		// SmartDashboard.putString("DB/String 8", "D: " +
+		// pidGyroController.getD());
 	}
 
 	public void addP(double x) {
