@@ -38,8 +38,9 @@ public class Robot extends IterativeRobot {
 
 	public void robotInit() {
 
+		// Camera setup
 		CameraServer.getInstance().startAutomaticCapture("LYNX Camera", 0);
-
+		
 		// Robot Drive
 		m_robot = new DriveTrain(Mapping.fl, Mapping.bl, Mapping.fr, Mapping.br);
 		m_robot.setExpiration(0.5);
@@ -61,8 +62,6 @@ public class Robot extends IterativeRobot {
 
 	public void teleopPeriodic() {
 
-		// Xbox controller with both sticks
-
 		/* CHANGING SPEEDS */
 		if (m_xBox.getYButton())
 			m_driveSpeed = DRIVE_SPEED_FAST;
@@ -72,6 +71,9 @@ public class Robot extends IterativeRobot {
 			m_driveSpeed = DRIVE_SPEED_SLOW;
 		else if (m_xBox.getBButton())
 			m_robot.resetEncoder();
+		
+		if (m_xBox.getRawButton(6))
+			m_robot.startTurning180();
 
 		/* DRIVING */
 		double y = -m_xBox.getRawAxis(Mapping.l_y_axis);
@@ -108,18 +110,9 @@ public class Robot extends IterativeRobot {
 		double y = -m_xBox.getRawAxis(Mapping.l_y_axis);
 		y = Utils.map(y, -1, 1, -m_driveSpeed, m_driveSpeed);
 
-		m_robot.driveStraight(y);
-
 		m_robot.tick();
 	}
 
-	/**
-	 * Different auto modes can be selected. This can be chosen in the dashboard
-	 * textbox, under Gyro
-	 * 
-	 * Runs once when Autonomous is enabled. autoSelected is the String entred
-	 * from the dashboard, which dictates which auto mode is to be used
-	 */
 	public void autonomousInit() {
 		autoSelected = SmartDashboard.getString("Auto Selector", "default");
 		System.out.println("Auto selected: " + autoSelected);
