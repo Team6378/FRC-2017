@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.VictorSP;
 
 /**
- * Controls the winch subsystem that climbs the rope.
+ * Controls the Winch subsystem that climbs the rope.
  * 
  * @author Omar Ashqar
  *
