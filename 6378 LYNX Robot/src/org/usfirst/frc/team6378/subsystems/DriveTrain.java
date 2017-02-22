@@ -41,12 +41,16 @@ public class DriveTrain extends RobotDrive {
 		gyro.reset();
 	}
 
+	public void stop180() {
+		turn180 = false;
+	}
+
 	public void maybe180() {
 		if (turn180)
-			tankDrive(0.4, 0.4);
+			setLeftRightMotorOutputs(0.3, -0.3);
 
 		double error = Math.abs(180 - gyro.getAngle());
-		if (error < 10)
+		if (error < 20)
 			turn180 = false;
 	}
 

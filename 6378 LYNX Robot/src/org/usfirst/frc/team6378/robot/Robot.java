@@ -72,8 +72,10 @@ public class Robot extends IterativeRobot {
 		else if (m_xBox.getBButton())
 			m_robot.resetEncoder();
 		
-		if (m_xBox.getRawButton(6))
+		if (m_xBox.getRawButton(8))
 			m_robot.startTurning180();
+		if (m_xBox.getRawButton(5))
+			m_robot.stop180();
 
 		/* DRIVING */
 		double y = -m_xBox.getRawAxis(Mapping.l_y_axis);

@@ -41,8 +41,8 @@ public class Winch {
 	public void climb(double leftTrigger, double rightTrigger) {
 		if (rightTrigger > 0)
 			setSpeed(rightTrigger);
-		else if (leftTrigger > 0)
-			setSpeed(-leftTrigger);
+//		else if (leftTrigger > 0)
+//			setSpeed(-leftTrigger);
 		else
 			stop();
 	}
