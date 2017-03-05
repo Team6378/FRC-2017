@@ -78,7 +78,7 @@ public class DriveTrain extends RobotDrive {
 	public void tick() {
 		maybe180();
 
-		SmartDashboard.putString("DB/String 0", "Distance: " + encoder.getDistance());
-		SmartDashboard.putString("DB/String 1", "Current angle: " + gyro.getAngle());
+//		SmartDashboard.putString("DB/String 0", "Distance: " + encoder.getDistance());
+//		SmartDashboard.putString("DB/String 1", "Current angle: " + gyro.getAngle());
 	}
 }

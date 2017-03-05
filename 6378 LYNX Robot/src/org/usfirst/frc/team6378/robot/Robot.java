@@ -1,5 +1,6 @@
 package org.usfirst.frc.team6378.robot;
 
+import org.usfirst.frc.team6378.subsystems.Actuator;
 import org.usfirst.frc.team6378.subsystems.DriveTrain;
 import org.usfirst.frc.team6378.subsystems.Winch;
 import org.usfirst.frc.team6378.utils.Mapping;
@@ -28,10 +29,11 @@ public class Robot extends IterativeRobot {
 
 	// Subsystems
 	private Winch m_winch;
+	private Actuator m_actuator;
 
 	// Controllers
 	private XboxController m_xBox;
-	private Joystick m_jStick;
+	//private Joystick m_jStick;
 
 	/* AUTO MODES */
 	private String autoSelected;
@@ -48,11 +50,13 @@ public class Robot extends IterativeRobot {
 
 		// Subsystems
 		m_winch = new Winch(Mapping.l_climb, Mapping.r_climb);
+		m_actuator = new Actuator(Mapping.actuator);
+		m_actuator.retract();
 
 		// Controllers
 		m_xBox = new XboxController(0);
 		// m_jStick = new Joystick(1);
-
+		
 		System.out.println(">>> Robot initialized");
 	}
 
@@ -69,13 +73,21 @@ public class Robot extends IterativeRobot {
 			m_driveSpeed = DRIVE_SPEED_MEDIUM;
 		else if (m_xBox.getAButton())
 			m_driveSpeed = DRIVE_SPEED_SLOW;
-		else if (m_xBox.getBButton())
+		
+		/* SUBSYSTEMS */
+		if (m_xBox.getRawButton(Mapping.l_bumper))
+			m_actuator.retract();
+		else if (m_xBox.getRawButton(Mapping.r_bumper))
+			m_actuator.extend();
+		
+		/* TECHNICAL */
+		if (m_xBox.getBButton())
 			m_robot.resetEncoder();
 		
-		if (m_xBox.getRawButton(8))
-			m_robot.startTurning180();
-		if (m_xBox.getRawButton(5))
-			m_robot.stop180();
+//		if (m_xBox.getRawButton(8))
+//			m_robot.startTurning180();
+//		if (m_xBox.getRawButton(5))
+//			m_robot.stop180();
 
 		/* DRIVING */
 		double y = -m_xBox.getRawAxis(Mapping.l_y_axis);
@@ -85,7 +97,7 @@ public class Robot extends IterativeRobot {
 
 		m_robot.arcadeDrive(y, x, true);
 
-		/* CLIMBER */
+		/* WINCH */
 		double leftTrigger = m_xBox.getRawAxis(Mapping.l_trigger_axis);
 		double rightTrigger = m_xBox.getRawAxis(Mapping.r_trigger_axis);
 
