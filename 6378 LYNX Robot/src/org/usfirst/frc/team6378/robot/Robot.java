@@ -132,6 +132,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Auto selected: " + autoSelected);
 		
 		m_robot.resetEncoder();
+		m_robot.initTimer();
 	}
 
 	public void autonomousPeriodic() {
