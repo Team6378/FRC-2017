@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.VictorSP;
  */
 public class Winch {
 
-	private final double maxSpeed = 0.5;
+	private double maxSpeed = 0.6;
 
 	private SpeedController m_leftMotor, m_rightMotor;
 
@@ -28,6 +28,9 @@ public class Winch {
 	public Winch(int leftPin, int rightPin) {
 		m_leftMotor = new VictorSP(leftPin);
 		m_rightMotor = new VictorSP(rightPin);
+	}
+	public void setMaxSpeed(Double maxSpeed){
+		this.maxSpeed = maxSpeed;
 	}
 
 	/**

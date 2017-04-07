@@ -17,10 +17,11 @@ public final class Mapping {
 
 	/* ANALOG INPUT */
 	public static final int gyro = 0;
+	public static final int encoder_yellow = 2, encoder_blue = 3;
 
 	/* CONTROLLERS */
 	public static final int l_y_axis = 1, r_x_axis = 4;
 	public static final int l_trigger_axis = 2, r_trigger_axis = 3;
-	public static final int l_bumper = 5, r_bumper = 8;
+	public static final int l_bumper = 5, r_bumper = 6;
 
 }

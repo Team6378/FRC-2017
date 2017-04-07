@@ -29,7 +29,7 @@ public class Robot extends IterativeRobot {
 
 	// Subsystems
 	private Winch m_winch;
-	private Actuator m_actuator;
+//	private Actuator m_actuator;
 
 	// Controllers
 	private XboxController m_xBox;
@@ -50,8 +50,8 @@ public class Robot extends IterativeRobot {
 
 		// Subsystems
 		m_winch = new Winch(Mapping.l_climb, Mapping.r_climb);
-		m_actuator = new Actuator(Mapping.actuator);
-		m_actuator.retract();
+//		m_actuator = new Actuator(Mapping.actuator);
+//		m_actuator.retract();
 
 		// Controllers
 		m_xBox = new XboxController(0);
@@ -76,9 +76,9 @@ public class Robot extends IterativeRobot {
 		
 		/* SUBSYSTEMS */
 		if (m_xBox.getRawButton(Mapping.l_bumper))
-			m_actuator.retract();
+			m_winch.setMaxSpeed(0.3);
 		else if (m_xBox.getRawButton(Mapping.r_bumper))
-			m_actuator.extend();
+			m_winch.setMaxSpeed(0.6);
 		
 		/* TECHNICAL */
 		if (m_xBox.getBButton())
