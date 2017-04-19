@@ -18,7 +18,7 @@ public class DriveTrain extends RobotDrive {
 	// Subsystems
 	private Gyro gyro;
 
-	private Encoder encoder;
+	public Encoder encoder;
 
 	// private double startedTurningAngle;
 	// private boolean turn180 = false;
@@ -28,8 +28,16 @@ public class DriveTrain extends RobotDrive {
 	private final String sanicAuto = "sanic";
 	private final String encoderAuto = "encoder";
 	private final String middleAuto = "middle";
-	private final String leftAuto = "left";
-	private final String rightAuto = "right";
+
+	private final String lbAuto = "lb";
+	private final String rbAuto = "rb";
+	private final String lrAuto = "lr";
+	private final String rrAuto = "rr";
+
+	private boolean reached = false;
+
+	private final String rightSliderAuto = "rightslider";
+	private final String leftSliderAuto = "leftslider";
 
 	private long autoStartTime;
 
@@ -39,12 +47,14 @@ public class DriveTrain extends RobotDrive {
 		gyro = new ADXRS450_Gyro(SPI.Port.kOnboardCS0);
 		gyro.calibrate();
 
-		encoder = new Encoder(Mapping.encoder_yellow, Mapping.encoder_blue, false, EncodingType.k4X);
+		encoder = new Encoder(Mapping.encoder_yellow, Mapping.encoder_blue, true, EncodingType.k4X);
+		encoder.setDistancePerPulse(Math.PI * 6 / 1440);
 		encoder.reset();
 	}
 
 	public void resetEncoder() {
-		// encoder.reset();
+		SmartDashboard.putNumber("encoder distance", encoder.getDistance());
+		encoder.reset();
 	}
 
 	public void resetGyro() {
@@ -74,42 +84,136 @@ public class DriveTrain extends RobotDrive {
 
 	public void initTimer() {
 		autoStartTime = System.currentTimeMillis();
+		reached = false;
 	}
 
 	public void driveAuto(String autoSelected) {
 		switch (autoSelected) {
-		case leftAuto:
+
+		case leftSliderAuto:
 			// drive straight
 			if ((System.currentTimeMillis() - autoStartTime) / 1000 < 1.5)
 				drive(autoSpeed, 0.00001);
-			else if (Math.abs(encoder.getDistance()) < 2)
+			else if ((System.currentTimeMillis() - autoStartTime) / 1000 < SmartDashboard.getDouble("DB/Slider 0")
+					&& !reached)
 				drive(autoSpeed, 0);
 			// start turning right
-			else if (Math.abs(encoder.getDistance()) < 3)
-				drive(0, 1);
+			else if (Math.abs(gyro.getAngle()) < SmartDashboard.getDouble("DB/Slider 1")) {
+				reached = true;
+				drive(autoSpeed, 1);
+			}
 			// straight again
-			else if (Math.abs(encoder.getDistance()) < 2000)
+			else if (Math.abs(encoder.getDistance()) < 200)
 				drive(autoSpeed, 0);
+
+			tick();
 			break;
-		case rightAuto:
-			if ((System.currentTimeMillis() - autoStartTime) / 1000 < 0)
-				drive(0.5, 0.00001);
-			else if (Math.abs(encoder.getDistance()) < 1700)
-				drive(0.5, 0);
+		case rightSliderAuto:
+			// drive straight
+			if ((System.currentTimeMillis() - autoStartTime) / 1000 < 1.5)
+				drive(autoSpeed, 0.00001);
+			else if ((System.currentTimeMillis() - autoStartTime) / 1000 < SmartDashboard.getDouble("DB/Slider 0") && !reached)
+				drive(autoSpeed, 0);
+			// start turning right
+			else if (Math.abs(gyro.getAngle()) < SmartDashboard.getDouble("DB/Slider 1")) {
+				
+				reached = true;
+				drive(autoSpeed, -1);
+			}
+			// straight again
+			else if (Math.abs(encoder.getDistance()) < 200)
+				drive(autoSpeed, 0);
+
+			tick();
+			break;
+		case lbAuto:
+			// SHOULD BE GOOD
+			// drive straight
+			if ((System.currentTimeMillis() - autoStartTime) / 1000 < 1.5)
+				drive(autoSpeed, 0.00001);
+			else if ((System.currentTimeMillis() - autoStartTime) / 1000 < 2.5)
+				drive(autoSpeed, 0);
+			// start turning right
+			else if (Math.abs(gyro.getAngle()) < 50)
+				drive(autoSpeed, 1);
+			// straight again
+			else if (Math.abs(encoder.getDistance()) < 2500)
+				drive(autoSpeed, 0);
+
+			tick();
+			break;
+		case rbAuto:
+			// drive straight
+			if ((System.currentTimeMillis() - autoStartTime) / 1000 < 1.5)
+				drive(autoSpeed, 0.00001);
+			else if ((System.currentTimeMillis() - autoStartTime) / 1000 < 2.5)
+				drive(autoSpeed, 0);
+			// start turning right
+			else if (Math.abs(gyro.getAngle()) < 50)
+				drive(autoSpeed, -1);
+			// straight again
+			else if (Math.abs(encoder.getDistance()) < 2500)
+				drive(autoSpeed, 0);
+
+			tick();
+			break;
+		case lrAuto:
+			// drive straight
+			if ((System.currentTimeMillis() - autoStartTime) / 1000 < 1.5)
+				drive(autoSpeed, 0.00001);
+			else if ((System.currentTimeMillis() - autoStartTime) / 1000 < 2.5)
+				drive(autoSpeed, 0);
+			// start turning right
+			else if (Math.abs(gyro.getAngle()) < 50)
+				drive(autoSpeed, -1);
+			// straight again
+			else if (Math.abs(encoder.getDistance()) < 2500)
+				drive(autoSpeed, 0);
+
+			tick();
+			break;
+		case rrAuto:
+			// SHOULD BE GOOD
+			// drive straight
+			if ((System.currentTimeMillis() - autoStartTime) / 1000 < 1.5)
+				drive(autoSpeed, 0.00001);
+			else if ((System.currentTimeMillis() - autoStartTime) / 1000 < 3)
+				drive(autoSpeed, 0);
+			// start turning right
+			else if (Math.abs(gyro.getAngle()) < 50)
+				drive(autoSpeed, -1);
+			// straight again
+			else if (Math.abs(encoder.getDistance()) < 2500)
+				drive(autoSpeed, 0);
+
+			tick();
 			break;
 		case middleAuto:
 			if ((System.currentTimeMillis() - autoStartTime) / 1000 < 1.5)
 				drive(autoSpeed, 0.00001);
-			else if (Math.abs(encoder.getDistance()) < 1700)
+			else if (Math.abs(encoder.getDistance()) < 30)
 				drive(autoSpeed, 0);
+
+			tick();
 			break;
 		case sanicAuto:
 			if ((System.currentTimeMillis() - autoStartTime) / 1000 < sanicSeconds)
 				drive(autoSpeed, 0);
 			break;
 		case encoderAuto:
-			if (Math.abs(encoder.getDistance()) < 1700)
+			// drive straight
+			if ((System.currentTimeMillis() - autoStartTime) / 1000 < 1.5)
+				drive(autoSpeed, 0.00001);
+			else if ((System.currentTimeMillis() - autoStartTime) / 1000 < SmartDashboard.getDouble("DB/Slider 0"))
 				drive(autoSpeed, 0);
+			// start turning right
+			else if (Math.abs(gyro.getAngle()) < 50)
+				drive(autoSpeed, -1);
+			// straight again
+			else if (Math.abs(encoder.getDistance()) < 2500)
+				drive(autoSpeed, 0);
+
+			tick();
 			break;
 		case defaultAuto:
 		default:
@@ -120,9 +224,7 @@ public class DriveTrain extends RobotDrive {
 
 	public void tick() {
 		// maybe180();
-
 		SmartDashboard.putString("DB/String 0", "Distance: " + encoder.getDistance());
-		// SmartDashboard.putString("DB/String 1", "Current angle: " +
-		// gyro.getAngle());
+		SmartDashboard.putString("DB/String 1", "Current angle: " + gyro.getAngle());
 	}
 }

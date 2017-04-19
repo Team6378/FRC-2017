@@ -2,6 +2,7 @@ package org.usfirst.frc.team6378.robot;
 
 import org.usfirst.frc.team6378.subsystems.Actuator;
 import org.usfirst.frc.team6378.subsystems.DriveTrain;
+import org.usfirst.frc.team6378.subsystems.Test;
 import org.usfirst.frc.team6378.subsystems.Winch;
 import org.usfirst.frc.team6378.utils.Mapping;
 import org.usfirst.frc.team6378.utils.Utils;
@@ -132,6 +133,7 @@ public class Robot extends IterativeRobot {
 		System.out.println("Auto selected: " + autoSelected);
 		
 		m_robot.resetEncoder();
+		m_robot.resetGyro();
 		m_robot.initTimer();
 	}
 
@@ -143,6 +145,7 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void disabledPeriodic() {
+		SmartDashboard.putNumber("encoder distance", m_robot.encoder.getDistance());
 	}
 
 	public void robotPeriodic() {
