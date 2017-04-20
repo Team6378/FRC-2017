@@ -102,10 +102,10 @@ public class Robot extends IterativeRobot {
 		/* TECHNICAL */
 //		if (m_xBox.getBButton())
 //			m_robot.resetEncoder();
-		// if (m_xBox.getRawButton(8))
-		// m_robot.startTurning180();
-		// if (m_xBox.getRawButton(5))
-		// m_robot.stop180();
+//		 if (m_xBox.getRawButton(8))
+//		 m_robot.startTurning180();
+//		 if (m_xBox.getRawButton(5))
+//		 m_robot.stop180();
 	}
 
 	public void testInit() {

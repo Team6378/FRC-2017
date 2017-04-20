@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Controls the robot drivetrain
+ * Controls the robot drivetrain.
  * 
  * @author Omar Ashqar
  *
@@ -47,11 +47,8 @@ public class DriveTrain extends RobotDrive {
 	private final double OFFSET_TIME = 1.5, OFFSET = 0.00001;
 
 	// ???
-	long currTime;
-	double currAngle;
-	double currDistance;
-	double slider0;
-	double slider1;
+	private long currTime;
+	private double currAngle, currDistance, slider0, slider1;
 
 	public DriveTrain(int frontLeftMotor, int rearLeftMotor, int frontRightMotor, int rearRightMotor) {
 		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);

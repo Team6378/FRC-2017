@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.VictorSP;
  */
 public class Winch {
 
+	// TODO Enable/Disable motors?
+	
 	public static final double WINCH_SPEED_FAST = 0.8, WINCH_SPEED_SLOW = 0.3;
 	private double maxSpeed = WINCH_SPEED_FAST;
 

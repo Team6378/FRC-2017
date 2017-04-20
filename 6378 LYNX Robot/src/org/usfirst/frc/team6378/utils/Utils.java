@@ -1,7 +1,7 @@
 package org.usfirst.frc.team6378.utils;
 
 /**
- * THis class has multiple useful algorithms.
+ * This class has multiple useful algorithms.
  * 
  * @author Omar Ashqar
  *
