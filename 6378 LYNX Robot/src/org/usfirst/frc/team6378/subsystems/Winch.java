@@ -18,7 +18,7 @@ public class Winch {
 	public static final double WINCH_SPEED_FAST = 0.8, WINCH_SPEED_SLOW = 0.3;
 	private double maxSpeed = WINCH_SPEED_FAST;
 
-	private SpeedController m_leftMotor;// m_rightMotor;
+	private SpeedController m_leftMotor, m_rightMotor;
 
 	/**
 	 * Constructs a Winch object that controls the robot's climbing mechanism.
@@ -30,7 +30,7 @@ public class Winch {
 	 */
 	public Winch(int leftPin, int rightPin) {
 		m_leftMotor = new VictorSP(leftPin);
-		// m_rightMotor = new VictorSP(rightPin);
+		 m_rightMotor = new VictorSP(rightPin);
 	}
 
 	public void setMaxSpeed(Double maxSpeed) {
@@ -48,8 +48,8 @@ public class Winch {
 	public void climb(double leftTrigger, double rightTrigger) {
 		if (rightTrigger > 0)
 			setSpeed(rightTrigger);
-		// else if (leftTrigger > 0)
-		// setSpeed(-leftTrigger);
+		 else if (leftTrigger > 0)
+		 setSpeed(-leftTrigger);
 		else
 			stop();
 	}
@@ -64,7 +64,7 @@ public class Winch {
 	public void setSpeed(double speed) {
 		double mappedSpeed = Utils.map(speed, 0, 1, 0, maxSpeed);
 		m_leftMotor.set(mappedSpeed);
-		// m_rightMotor.set(-mappedSpeed);
+		 m_rightMotor.set(-mappedSpeed);
 	}
 
 	/**
@@ -72,6 +72,6 @@ public class Winch {
 	 */
 	public void stop() {
 		m_leftMotor.set(0);
-		// m_rightMotor.set(0);
+		 m_rightMotor.set(0);
 	}
 }

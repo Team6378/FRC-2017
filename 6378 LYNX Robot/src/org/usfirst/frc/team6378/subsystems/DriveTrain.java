@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveTrain extends RobotDrive {
 
 	private final double AUTO_STRAIGHT_SPEED = 0.3;
-	private final double AUTO_TURN_SPEED = 0.3;
+	private final double AUTO_TURN_SPEED = 0.4;
 	private final long sanicSeconds = 10;
 
 	// Subsystems
@@ -30,9 +30,11 @@ public class DriveTrain extends RobotDrive {
 	private final String timeAuto = "time";
 	private final String encoderAuto = "encoder";
 	private final String middleAuto = "middle";
+	private final String middleSliderAuto = "midslid";
 
 	private final String rightSliderAuto = "rightslider";
 	private final String leftSliderAuto = "leftslider";
+	private final String boopAuto = "boop";
 
 	private final String lbAuto = "lb";
 	private final String rbAuto = "rb";
@@ -45,10 +47,12 @@ public class DriveTrain extends RobotDrive {
 
 	/* AUTO CONSTANTS */
 	private final double OFFSET_TIME = 1.5, OFFSET = 0.00001;
+	private final double kP = -0.005;
 
 	// ???
 	private long currTime;
-	private double currAngle, currDistance, slider0, slider1;
+	private double currAngle, currDistance, slider1, slider2, slider3, slider4;
+	private boolean isReset = false;
 
 	public DriveTrain(int frontLeftMotor, int rearLeftMotor, int frontRightMotor, int rearRightMotor) {
 		super(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
@@ -72,6 +76,7 @@ public class DriveTrain extends RobotDrive {
 	public void initTimer() {
 		autoStartTime = System.currentTimeMillis();
 		reached = false;
+		isReset = false;
 	}
 
 	public void leftAuto(double distanceSet, double angleSet) {
@@ -100,37 +105,71 @@ public class DriveTrain extends RobotDrive {
 
 	public void driveAuto(String autoSelected) {
 
+		// SmartDashboard.getDouble("DB/Slider 0")
 		currTime = (System.currentTimeMillis() - autoStartTime) / 1000;
 		currAngle = Math.abs(gyro.getAngle());
 		currDistance = Math.abs(encoder.getDistance());
 
-		slider0 = SmartDashboard.getDouble("DB/Slider 0");
-		slider1 = SmartDashboard.getDouble("DB/Slider 1");
+		slider1 = SmartDashboard.getDouble("DB/Slider 0");
+		slider2 = SmartDashboard.getDouble("DB/Slider 1");
+		slider3 = SmartDashboard.getDouble("DB/Slider 2");
+		slider4 = SmartDashboard.getDouble("DB/Slider 3");
 
 		switch (autoSelected) {
 
+		case boopAuto:
+			if (currTime < slider2) {
+				double fix = kP * gyro.getAngle();
+				drive(slider1, fix);
+			}
+			break;
+
 		case leftSliderAuto:
-			leftAuto(slider0, slider1);
+			leftAuto(slider1, slider2);
 			break;
 
 		case rightSliderAuto:
-			rightAuto(slider0, slider1);
+			rightAuto(slider1, slider2);
 			break;
 
 		case lbAuto:
-			leftAuto(slider0, slider1);
+			leftAuto(slider1, slider2);
 			break;
 
 		case rbAuto:
-			rightAuto(slider0, slider1);
+			rightAuto(slider1, slider2);
 			break;
 
 		case lrAuto:
-			leftAuto(slider0, slider1);
+			if (currTime < slider2) {
+				double fix = kP * gyro.getAngle();
+				drive(slider1, fix);
+			} else if (currAngle < slider3 && !isReset) { // Turn
+				drive(slider1, 1);
+			} else if (currTime < 10) {
+				if (!isReset) {
+					isReset = true;
+					gyro.reset();
+				}
+				double fix = kP * gyro.getAngle();
+				drive(slider1, fix);
+			}
 			break;
 
 		case rrAuto:
-			rightAuto(slider0, slider1);
+			if (currTime < slider2) {
+				double fix = kP * gyro.getAngle();
+				drive(slider1, fix);
+			} else if (currAngle < slider3 && !isReset) { // Turn
+				drive(slider1, -1);
+			} else if (currTime < 10) {
+				if (!isReset) {
+					isReset = true;
+					gyro.reset();
+				}
+				double fix = kP * gyro.getAngle();
+				drive(slider1, fix);
+			}
 			break;
 
 		case timeAuto:
@@ -141,6 +180,13 @@ public class DriveTrain extends RobotDrive {
 		case encoderAuto:
 			if (currDistance < 200)
 				drive(AUTO_STRAIGHT_SPEED, 0);
+			break;
+
+		case middleSliderAuto:
+			if (currTime < OFFSET_TIME)
+				drive(slider1, slider2);
+			else if (currTime < slider3)
+				drive(slider1, 0);
 			break;
 
 		case middleAuto:
